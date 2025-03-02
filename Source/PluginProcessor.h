@@ -42,7 +42,82 @@ public:
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
 
+    // Make the AudioProcessorValueTreeState public so the editor can access it
+    juce::AudioProcessorValueTreeState parameters;
+
+    // Add these public methods
+    // Getter methods for parameter values
+    float getRoomSize() const
+    {
+        return *parameters.getRawParameterValue("roomSize");
+    }
+
+    float getDamping() const
+    {
+        return *parameters.getRawParameterValue("damping");
+    }
+
+    float getWetLevel() const
+    {
+        return *parameters.getRawParameterValue("wetLevel");
+    }
+
+    float getDryLevel() const
+    {
+        return *parameters.getRawParameterValue("dryLevel");
+    }
+
+    float getWidth() const { return *parameters.getRawParameterValue("width"); }
+
+    float getFreezeMode() const
+    {
+        return *parameters.getRawParameterValue("freezeMode");
+    }
+
+    // Setter methods for parameter values
+    void setRoomSize(const float value)
+    {
+        parameters.getParameter("roomSize")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
+    void setDamping(const float value)
+    {
+        parameters.getParameter("damping")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
+    void setWetLevel(const float value)
+    {
+        parameters.getParameter("wetLevel")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
+    void setDryLevel(const float value)
+    {
+        parameters.getParameter("dryLevel")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
+    void setWidth(const float value)
+    {
+        parameters.getParameter("width")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
+    void setFreezeMode(const float value)
+    {
+        parameters.getParameter("freezeMode")->setValueNotifyingHost(value);
+        updateReverbParameters();
+    }
+
 private:
     //==============================================================================
+    juce::Reverb reverb;
+    juce::Reverb::Parameters reverbParams;
+
+    void updateReverbParameters();
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
 };
